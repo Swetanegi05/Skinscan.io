@@ -6,6 +6,10 @@ import DetectedPatterns from "@/components/DetectedPatterns";
 import NextSteps from "@/components/NextSteps";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import { saveScan } from "@/lib/scans";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface AnalysisResult {
   riskLevel: "Low" | "Medium" | "High";
@@ -29,22 +33,17 @@ const fileToBase64 = (file: File): Promise<string> =>
   });
 
 const mapRoboflowToResult = (data: any): AnalysisResult => {
-  // Handle classification response
   const predictions = data.predictions || [];
-  
-  // Get top prediction confidence
   let topConfidence = 0;
   const patterns: { name: string; probability: number }[] = [];
 
   if (Array.isArray(predictions)) {
-    // Object detection format
     for (const pred of predictions) {
       const conf = Math.round((pred.confidence || 0) * 100);
       topConfidence = Math.max(topConfidence, conf);
       patterns.push({ name: pred.class || "Unknown", probability: conf });
     }
   } else if (typeof predictions === "object") {
-    // Classification format { class_name: confidence }
     for (const [className, conf] of Object.entries(predictions)) {
       const pct = Math.round((conf as number) * 100);
       topConfidence = Math.max(topConfidence, pct);
@@ -52,7 +51,6 @@ const mapRoboflowToResult = (data: any): AnalysisResult => {
     }
   }
 
-  // Also check top/predicted_classes format
   if (data.top && data.confidence != null) {
     topConfidence = Math.round(data.confidence * 100);
     if (patterns.length === 0) {
@@ -64,18 +62,12 @@ const mapRoboflowToResult = (data: any): AnalysisResult => {
     patterns.push({ name: "No patterns detected", probability: 0 });
   }
 
-  // Sort by probability descending
   patterns.sort((a, b) => b.probability - a.probability);
 
-  // Map confidence to risk level
   let riskLevel: "Low" | "Medium" | "High";
-  if (topConfidence > 80) {
-    riskLevel = "High";
-  } else if (topConfidence > 50) {
-    riskLevel = "Medium";
-  } else {
-    riskLevel = "Low";
-  }
+  if (topConfidence > 80) riskLevel = "High";
+  else if (topConfidence > 50) riskLevel = "Medium";
+  else riskLevel = "Low";
 
   const stepSets = {
     Low: [
@@ -99,21 +91,20 @@ const mapRoboflowToResult = (data: any): AnalysisResult => {
     ],
   };
 
-  return {
-    riskLevel,
-    confidence: topConfidence,
-    patterns,
-    steps: stepSets[riskLevel],
-  };
+  return { riskLevel, confidence: topConfidence, patterns, steps: stepSets[riskLevel] };
 };
 
 const AnalyzePage = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const [moleLabel, setMoleLabel] = useState("");
+  const { user } = useAuth();
 
   const handleAnalyze = async (file: File) => {
     setIsAnalyzing(true);
     setResult(null);
+    setCurrentFile(file);
     try {
       const base64 = await fileToBase64(file);
       const response = await fetch(
@@ -124,15 +115,24 @@ const AnalyzePage = () => {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
       );
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
       console.log("Roboflow response:", data);
       const mapped = mapRoboflowToResult(data);
       setResult(mapped);
+
+      // Auto-save if logged in
+      if (user) {
+        const saved = await saveScan({
+          file,
+          riskLevel: mapped.riskLevel,
+          confidence: mapped.confidence,
+          patterns: mapped.patterns,
+          steps: mapped.steps,
+          moleLabel: moleLabel || undefined,
+        });
+        if (saved) toast.success("Scan saved to your history.");
+      }
     } catch (err) {
       console.error("Analysis failed:", err);
       toast.error("Analysis failed. Please try again.");
@@ -153,8 +153,27 @@ const AnalyzePage = () => {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-5">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-4">
+            {user && (
+              <div>
+                <Label htmlFor="mole-label" className="text-sm font-medium text-foreground">
+                  Mole Label (for tracking)
+                </Label>
+                <Input
+                  id="mole-label"
+                  placeholder="e.g. Left arm, Back mole #2"
+                  value={moleLabel}
+                  onChange={(e) => setMoleLabel(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+            )}
             <ImageUploader onAnalyze={handleAnalyze} isAnalyzing={isAnalyzing} />
+            {!user && (
+              <p className="text-xs text-muted-foreground text-center">
+                <a href="/auth" className="text-primary hover:underline">Sign in</a> to save scans to your history.
+              </p>
+            )}
           </div>
 
           <div className="lg:col-span-3">
