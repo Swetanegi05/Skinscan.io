@@ -189,6 +189,11 @@ const AnalyzePage = () => {
                   <RiskGauge level={result.riskLevel} confidence={result.confidence} />
                   <DetectedPatterns patterns={result.patterns} />
                   <NextSteps steps={result.steps} riskLevel={result.riskLevel} />
+                  <ClinicalExplanation
+                    riskLevel={result.riskLevel}
+                    confidence={result.confidence}
+                    patterns={result.patterns}
+                  />
                 </motion.div>
               ) : (
                 <motion.div
