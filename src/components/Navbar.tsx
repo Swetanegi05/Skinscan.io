@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [dark, setDark] = useState(() => {
@@ -11,6 +12,7 @@ const Navbar = () => {
     return false;
   });
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -43,6 +45,22 @@ const Navbar = () => {
               </Button>
             </Link>
           ))}
+          {user ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => signOut()}
+              className="ml-1 gap-1"
+            >
+              <LogOut className="h-4 w-4" /> Sign Out
+            </Button>
+          ) : (
+            <Link to="/auth">
+              <Button variant="ghost" size="sm" className="ml-1 gap-1">
+                <User className="h-4 w-4" /> Sign In
+              </Button>
+            </Link>
+          )}
           <Button
             variant="ghost"
             size="icon"
