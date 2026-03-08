@@ -1,73 +1,105 @@
-# Welcome to your Lovable project
+This README is designed to look like a professional, engineering-first project. It emphasizes the "Bio + CS" intersection required by the BACSA Hacks judges while highlighting your background in Data Engineering.
 
-## Project info
+---
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+# 🩺 SkinScan.io
 
-## How can I edit this code?
+**Precision AI for Early Dermatological Screening**
 
-There are several ways of editing your application.
+## 📖 Overview
 
-**Use Lovable**
+**SkinScan.io** is a high-performance diagnostic support tool built for the **BACSA Hacks 1-Day Challenge** at the University of Toronto. It addresses the "Open Challenge: Disease Detection" by transforming mobile imagery into actionable clinical data.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+By combining a specialized **Convolutional Neural Network (CNN)** for lesion classification with an **Agentic AI reasoning layer**, SkinScan.io identifies potential risks and provides structured justifications for its findings, bridging the gap between raw data and patient understanding.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## ✨ Key Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+* **Neural Lesion Detection**: Real-time analysis of skin anomalies using a CNN trained on 2,000+ clinical images.
+* **Unified Risk Index (URI)**: A custom mathematical model that weights prediction probability against model confidence to provide a transparent risk level.
+* **Longitudinal "Mole Tracking"**: A secure history dashboard that allows users to monitor the evolution of specific spots over time—crucial for identifying malignant growth.
+* **Agentic Clinical Reasoning**: An LLM-powered engine that translates technical metadata (asymmetry, border irregularity) into human-readable reports.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🛠 Tech Stack
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+| Category | Technology |
+| --- | --- |
+| **Frontend** | React, Vite, Tailwind CSS, Lucide Icons |
+| **Backend** | Python (FastAPI), Supabase (PostgreSQL) |
+| **Computer Vision** | Roboflow Inference API, CNN (YOLOv8 architecture) |
+| **Reasoning Engine** | Gemini 2.0 Flash |
+| **Deployment** | Vercel (Frontend), Railway (Backend) |
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🧬 The Science: Modeling Uncertainty
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+A core requirement for this challenge was to **model uncertainty** and **justify assumptions**. SkinScan.io does this through our proprietary Risk Index formula:
+
+$$URI = P(\text{condition} \mid \text{visuals}) \times C(\text{detection confidence})$$
+
+Where:
+
+* $P$ is the softmax probability from the final layer of the CNN.
+* $C$ is the bounding-box confidence score reflecting image quality and lighting.
+
+If the $URI$ falls below a defined threshold, the system triggers a **"Low Confidence"** state, advising the user to retake the photo under better lighting rather than providing a high-variance guess.
+
+---
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+
+* Node.js v18+
+* Python 3.9+
+* Roboflow API Key
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/skinscan-io.git
+cd skinscan-io
+
 ```
 
-**Edit a file directly in GitHub**
+### 2. Backend Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+cd backend
+pip install -r requirements.txt
+# Create a .env file with your ROBOFLOW_API_KEY and SUPABASE_URL
+python main.py
 
-**Use GitHub Codespaces**
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 3. Frontend Setup
 
-## What technologies are used for this project?
+```bash
+cd frontend
+npm install
+npm run dev
 
-This project is built with:
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🚧 Challenges & Lessons Learned
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+* **Clinical Responsibility**: We learned that a "High Confidence" prediction on a "Low Quality" image is a failure state. We architected a validation layer to ensure data integrity.
+* **Data Normalization**: Handling variations in skin tones and lighting was the biggest hurdle. We implemented pre-processing steps to normalize contrast before inference.
+* **Asynchronous Pipelines**: Orchestrating vision APIs and reasoning LLMs concurrently required robust state management to keep the UI snappy.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 🔮 Future Roadmap
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. **On-Device Inference**: Porting the model to TensorFlow Lite for 100% offline, private scanning.
+2. **Fitzpatrick Skin Type Integration**: Enhancing the model to better account for diverse skin melanin levels.
+3. **Telehealth Integration**: One-click sharing of "Mole Tracking" history with board-certified dermatologists.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
