@@ -4,6 +4,7 @@ import ImageUploader from "@/components/ImageUploader";
 import RiskGauge from "@/components/RiskGauge";
 import DetectedPatterns from "@/components/DetectedPatterns";
 import NextSteps from "@/components/NextSteps";
+import ClinicalExplanation from "@/components/ClinicalExplanation";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -188,6 +189,11 @@ const AnalyzePage = () => {
                   <RiskGauge level={result.riskLevel} confidence={result.confidence} />
                   <DetectedPatterns patterns={result.patterns} />
                   <NextSteps steps={result.steps} riskLevel={result.riskLevel} />
+                  <ClinicalExplanation
+                    riskLevel={result.riskLevel}
+                    confidence={result.confidence}
+                    patterns={result.patterns}
+                  />
                 </motion.div>
               ) : (
                 <motion.div

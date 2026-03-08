@@ -1,1 +1,4 @@
 project_id = "ydtmabzxhhmdkeerzpbw"
+
+[functions.clinical-explanation]
+verify_jwt = false
