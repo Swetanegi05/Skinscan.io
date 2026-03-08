@@ -23,7 +23,7 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 glass-surface border-b">
+    <header className="sticky top-0 z-50 glass-surface">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg gradient-clinical flex items-center justify-center">
