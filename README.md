@@ -1,6 +1,3 @@
-This README is designed to look like a professional, engineering-first project. It emphasizes the "Bio + CS" intersection required by the BACSA Hacks judges while highlighting your background in Data Engineering.
-
----
 
 # 🩺 SkinScan.io
 
