@@ -187,8 +187,9 @@ const AnalyzePage = () => {
               {result ? (
                 <motion.div
                   key="results"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 20 }}
                   className="space-y-4"
                 >
                   <RiskGauge level={result.riskLevel} confidence={result.confidence} />

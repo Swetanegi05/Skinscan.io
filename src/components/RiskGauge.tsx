@@ -30,7 +30,7 @@ const RiskGauge = ({ level, confidence }: RiskGaugeProps) => {
           className={`rounded-full p-3 ${bgClass}`}
         >
           <Icon className={`h-8 w-8 ${colorClass}`} />
-        </div>
+        </motion.div>
         <div>
           <p className={`text-2xl font-bold ${colorClass}`}>{label}</p>
           <p className="text-sm text-muted-foreground">
