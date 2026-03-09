@@ -29,7 +29,7 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg gradient-clinical flex items-center justify-center">
-            <span className="text-sm font-bold text-primary-foreground">D</span>
+            <span className="text-sm font-bold text-primary-foreground">S</span>
           </div>
           <span className="text-lg font-semibold text-foreground">SkinScan.io</span>
         </Link>
