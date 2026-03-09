@@ -31,7 +31,7 @@ const Navbar = () => {
           <div className="h-8 w-8 rounded-lg gradient-clinical flex items-center justify-center">
             <span className="text-sm font-bold text-primary-foreground">D</span>
           </div>
-          <span className="text-lg font-semibold text-foreground">DermAI</span>
+          <span className="text-lg font-semibold text-foreground">SkinScan.io</span>
         </Link>
 
         <nav className="flex items-center gap-1">
