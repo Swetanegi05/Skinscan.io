@@ -96,12 +96,17 @@ const HistoryPage = () => {
     <div className="min-h-screen gradient-hero">
       <Navbar />
       <main className="container py-8 max-w-4xl">
-        <div className="mb-8">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8"
+        >
           <h1 className="text-3xl font-bold text-foreground mb-2">Scan History</h1>
           <p className="text-muted-foreground">
             Track your skin lesion analyses over time.
           </p>
-        </div>
+        </motion.div>
 
         {/* Mole Tracking Chart */}
         {records.length > 0 && (

@@ -23,9 +23,14 @@ const RiskGauge = ({ level, confidence }: RiskGaugeProps) => {
     >
       <h3 className="text-sm font-medium text-muted-foreground mb-4">Risk Assessment</h3>
       <div className="flex items-center gap-4">
-        <div className={`rounded-full p-3 ${bgClass}`}>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+          className={`rounded-full p-3 ${bgClass}`}
+        >
           <Icon className={`h-8 w-8 ${colorClass}`} />
-        </div>
+        </motion.div>
         <div>
           <p className={`text-2xl font-bold ${colorClass}`}>{label}</p>
           <p className="text-sm text-muted-foreground">
