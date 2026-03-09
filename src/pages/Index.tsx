@@ -44,7 +44,7 @@ const Index = () => {
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-[hsl(187,72%,38%)] to-[hsl(200,80%,45%)]">Lesion Analysis</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              DermAI combines deep learning with dermoscopic pattern analysis to provide
+              SkinScan.io combines deep learning with dermoscopic pattern analysis to provide
               rapid risk assessments and actionable clinical recommendations.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
